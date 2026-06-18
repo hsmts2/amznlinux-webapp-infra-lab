@@ -1,0 +1,13 @@
+CREATE DATABASE users;
+
+USE users;
+
+CREATE TABLE tbl_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE USER 'testuser'@'172.31.%' IDENTIFIED BY '<YOUR_APP_DB_PASSWORD>';
+
+GRANT ALL PRIVILEGES ON users.* TO 'testuser'@'172.31.%';

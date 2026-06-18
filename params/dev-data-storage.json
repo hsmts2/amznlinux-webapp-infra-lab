@@ -1,0 +1,12 @@
+[
+  { "ParameterKey": "ProjectName", "ParameterValue": "amznlinux-webapp-infra-lab" },
+  { "ParameterKey": "EnvironmentName", "ParameterValue": "dev" },
+  { "ParameterKey": "ImageBucketName", "ParameterValue": "<YOUR_UNIQUE_IMAGE_BUCKET_NAME>" },
+  { "ParameterKey": "DBInstanceIdentifier", "ParameterValue": "database-1" },
+  { "ParameterKey": "DBEngineVersion", "ParameterValue": "11.4.7" },
+  { "ParameterKey": "DBInstanceClass", "ParameterValue": "db.t4g.micro" },
+  { "ParameterKey": "DBAllocatedStorage", "ParameterValue": "20" },
+  { "ParameterKey": "DBMasterUsername", "ParameterValue": "root" },
+  { "ParameterKey": "DBMasterPassword", "ParameterValue": "<YOUR_DB_MASTER_PASSWORD>" },
+  { "ParameterKey": "DBBackupRetentionPeriod", "ParameterValue": "0" }
+]

@@ -1,0 +1,14 @@
+[
+  { "ParameterKey": "ProjectName", "ParameterValue": "amznlinux-webapp-infra-lab" },
+  { "ParameterKey": "EnvironmentName", "ParameterValue": "dev" },
+  { "ParameterKey": "AmiId", "ParameterValue": "<YOUR_AMI_ID>" },
+  { "ParameterKey": "InstanceType", "ParameterValue": "t3.micro" },
+  { "ParameterKey": "KeyName", "ParameterValue": "<YOUR_KEY_NAME>" },
+  { "ParameterKey": "AllowedSshCidr", "ParameterValue": "<YOUR_GLOBAL_IP>/32" },
+  { "ParameterKey": "AllowedHttpCidr", "ParameterValue": "0.0.0.0/0" },
+  { "ParameterKey": "TestSV1PrivateIp", "ParameterValue": "172.31.0.44" },
+  { "ParameterKey": "TestSV2PrivateIp", "ParameterValue": "172.31.40.44" },
+  { "ParameterKey": "AdditionalVolumeSize", "ParameterValue": "8" },
+  { "ParameterKey": "AdditionalVolumeType", "ParameterValue": "gp3" },
+  { "ParameterKey": "ImageBucketName", "ParameterValue": "<YOUR_UNIQUE_IMAGE_BUCKET_NAME>" }
+]

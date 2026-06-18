@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Data and storage stack for amznlinux-webapp-infra-lab. Creates S3 bucket, bucket policy, and RDS MariaDB.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: amznlinux-webapp-infra-lab
+  EnvironmentName:
+    Type: String
+    Default: dev
+  ImageBucketName:
+    Type: String
+    Description: Globally unique S3 bucket name for image files.
+  DBInstanceIdentifier:
+    Type: String
+    Default: database-1
+  DBEngineVersion:
+    Type: String
+    Default: 11.4.7
+  DBInstanceClass:
+    Type: String
+    Default: db.t4g.micro
+  DBAllocatedStorage:
+    Type: Number
+    Default: 20
+  DBMasterUsername:
+    Type: String
+    Default: root
+  DBMasterPassword:
+    Type: String
+    NoEcho: true
+    MinLength: 8
+  DBBackupRetentionPeriod:
+    Type: Number
+    Default: 0
+
+Resources:
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref ImageBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Name
+          Value: !Ref ImageBucketName
+
+  ImageBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ImageBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: Statement1
+            Effect: Allow
+            Principal: '*'
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub arn:aws:s3:::${ImageBucketName}/*
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for RDS MariaDB
+      VpcId:
+        Fn::ImportValue: !Sub ${ProjectName}-${EnvironmentName}-VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId:
+            Fn::ImportValue: !Sub ${ProjectName}-${EnvironmentName}-WebSecurityGroupId
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId:
+            Fn::ImportValue: !Sub ${ProjectName}-${EnvironmentName}-PrivateServerSecurityGroupId
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-${EnvironmentName}-rds-sg
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: DB subnet group for MariaDB
+      SubnetIds:
+        - Fn::ImportValue: !Sub ${ProjectName}-${EnvironmentName}-PrivateSubnet1Id
+        - Fn::ImportValue: !Sub ${ProjectName}-${EnvironmentName}-PrivateSubnet2Id
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-${EnvironmentName}-db-subnet-group
+
+  MariaDBInstance:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      Engine: mariadb
+      EngineVersion: !Ref DBEngineVersion
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      StorageType: gp3
+      MasterUsername: !Ref DBMasterUsername
+      MasterUserPassword: !Ref DBMasterPassword
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: false
+      BackupRetentionPeriod: !Ref DBBackupRetentionPeriod
+      DeletionProtection: false
+      MultiAZ: false
+      AutoMinorVersionUpgrade: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-${EnvironmentName}-mariadb
+
+Outputs:
+  ImageBucketName:
+    Value: !Ref ImageBucket
+    Export:
+      Name: !Sub ${ProjectName}-${EnvironmentName}-ImageBucketName
+  ImageBucketUrl:
+    Value: !Sub https://${ImageBucketName}.s3.${AWS::Region}.amazonaws.com/
+    Export:
+      Name: !Sub ${ProjectName}-${EnvironmentName}-ImageBucketUrl
+  RDSEndpointAddress:
+    Value: !GetAtt MariaDBInstance.Endpoint.Address
+    Export:
+      Name: !Sub ${ProjectName}-${EnvironmentName}-RDSEndpointAddress
+  RDSEndpointPort:
+    Value: !GetAtt MariaDBInstance.Endpoint.Port
+    Export:
+      Name: !Sub ${ProjectName}-${EnvironmentName}-RDSEndpointPort

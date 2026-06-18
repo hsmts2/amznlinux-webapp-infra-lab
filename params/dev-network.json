@@ -1,0 +1,10 @@
+[
+  { "ParameterKey": "ProjectName", "ParameterValue": "amznlinux-webapp-infra-lab" },
+  { "ParameterKey": "EnvironmentName", "ParameterValue": "dev" },
+  { "ParameterKey": "VpcCidr", "ParameterValue": "172.31.0.0/16" },
+  { "ParameterKey": "PublicSubnetCidr", "ParameterValue": "172.31.0.0/24" },
+  { "ParameterKey": "PrivateSubnet1Cidr", "ParameterValue": "172.31.40.0/24" },
+  { "ParameterKey": "PrivateSubnet2Cidr", "ParameterValue": "172.31.60.0/24" },
+  { "ParameterKey": "AvailabilityZone1", "ParameterValue": "ap-northeast-1a" },
+  { "ParameterKey": "AvailabilityZone2", "ParameterValue": "ap-northeast-1c" }
+]

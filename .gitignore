@@ -1,0 +1,34 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# SSH keys
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Secrets
+.env
+*.secret
+secrets/
+credentials*
+config.local.*
+
+# Application secrets
+app/db.php
+
+# CloudFormation packaged artifacts
+.packaged/
+*.zip
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+*.tmp

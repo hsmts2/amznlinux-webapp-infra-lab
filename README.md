@@ -362,11 +362,3 @@ aws cloudformation delete-stack --stack-name amznlinux-webapp-infra-lab-network
 * 個人のグローバルIPアドレス
 * 実在環境のエンドポイント
 * `app/db.php`
-
----
-
-<br>
-
-## 書籍との差分
-
-書籍で手動構築した内容をもとに、CloudFormation で同等の学習環境を再現できるようにしています。ネットワーク、コンピュート、データストレージを3つのスタックに分け、Cross Stack Export / ImportValue で連携する構成に整理しています。
